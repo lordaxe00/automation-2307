@@ -16,3 +16,4 @@ OUTPUT/
 .vscode/
 .DS_Store
 Thumbs.db
+config/app_config.json
