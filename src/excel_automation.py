@@ -5,12 +5,13 @@ Preserves all formatting, merged cells, formulas and borders.
 import importlib
 import logging
 import shutil
+import textwrap
 from pathlib import Path
 from typing import Optional
 
 import openpyxl
 from openpyxl import load_workbook
-from openpyxl.styles import Font
+from openpyxl.styles import Alignment, Font
 from openpyxl.worksheet.worksheet import Worksheet
 
 from src.config_loader import AppConfig
@@ -147,6 +148,47 @@ class BIR2307ExcelFiller:
         except Exception as exc:
             logger.warning("Could not set font size for %s: %s", cell_addr, exc)
 
+    def _set_wrap_text(self, ws, cell_addr: str) -> None:
+        """Enable wrap text for a target cell or merged range."""
+        if not cell_addr:
+            return
+        try:
+            if hasattr(ws, "Range"):
+                rng = ws.Range(cell_addr)
+                rng.WrapText = True
+                return
+            cell = ws[cell_addr]
+            for merged in ws.merged_cells.ranges:
+                if cell.coordinate in merged:
+                    cell = ws.cell(row=merged.min_row, column=merged.min_col)
+                    break
+            cell.alignment = Alignment(wrap_text=True)
+        except Exception as exc:
+            logger.warning("Could not set wrap text for %s: %s", cell_addr, exc)
+
+    def _auto_fit_row(self, ws, row: int, text: str, cell_addr: Optional[str] = None) -> None:
+        """Adjust row height to accommodate wrapped text."""
+        if not text:
+            return
+        try:
+            if hasattr(ws, "Range"):
+                try:
+                    ws.Rows(row).EntireRow.AutoFit()
+                except Exception:
+                    ws.Rows(row).AutoFit()
+                return
+            if cell_addr:
+                col_letter = ''.join(ch for ch in cell_addr if ch.isalpha())
+            else:
+                return
+            width = ws.column_dimensions[col_letter].width or 30
+            max_chars = max(10, int(width * 1.1))
+            wrapped_lines = textwrap.wrap(text, width=max_chars)
+            line_count = max(1, len(wrapped_lines))
+            ws.row_dimensions[row].height = line_count * 18
+        except Exception as exc:
+            logger.warning("Could not autofit row %s: %s", row, exc)
+
     def _fill_period(self, ws: Worksheet, record: PayeeRecord) -> None:
         period = self._cell_map["period"]
         self._write(ws, period["date_from"], record.date_from)
@@ -254,8 +296,11 @@ class BIR2307ExcelFiller:
         def col_cell(col_letter: str) -> str:
             return f"{col_letter}{row}"
 
-        self._write(ws, col_cell(cols["description"]),
-                    record.income_description)
+        desc_addr = col_cell(cols["description"])
+        self._write(ws, desc_addr, record.income_description)
+        self._set_wrap_text(ws, desc_addr)
+        self._auto_fit_row(ws, row, record.income_description, desc_addr)
+
         self._write(ws, col_cell(cols["atc_code"]),
                     record.atc_code)
         self._write(ws, col_cell(cols["month1_amount"]),

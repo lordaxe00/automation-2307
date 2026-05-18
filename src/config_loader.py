@@ -3,13 +3,32 @@ config_loader.py - Centralized configuration management
 """
 import json
 import logging
+import shutil
+import sys
 from pathlib import Path
 from typing import Any, Dict
 
 logger = logging.getLogger(__name__)
 
-_BASE_DIR = Path(__file__).resolve().parent.parent
-_CONFIG_DIR = _BASE_DIR / "config"
+if getattr(sys, "frozen", False):
+    _STATIC_BASE_DIR = Path(sys._MEIPASS)
+    _USER_BASE_DIR = Path(sys.executable).resolve().parent
+else:
+    _STATIC_BASE_DIR = Path(__file__).resolve().parent.parent
+    _USER_BASE_DIR = _STATIC_BASE_DIR
+
+_STATIC_CONFIG_DIR = _STATIC_BASE_DIR / "config"
+_USER_CONFIG_DIR = _USER_BASE_DIR / "config"
+_STATIC_ASSETS_DIR = _STATIC_BASE_DIR / "assets"
+_USER_ASSETS_DIR = _USER_BASE_DIR / "assets"
+
+
+def _ensure_user_config() -> None:
+    _USER_CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    for file_name in ("app_config.json", "cell_mapping.json"):
+        user_file = _USER_CONFIG_DIR / file_name
+        if not user_file.exists():
+            shutil.copy2(_STATIC_CONFIG_DIR / file_name, user_file)
 
 
 def _load_json(filepath: Path) -> Dict[str, Any]:
@@ -41,8 +60,10 @@ class AppConfig:
         return cls._instance
 
     def _load(self):
-        self._app_cfg = _load_json(_CONFIG_DIR / "app_config.json")
-        self._cell_map = _load_json(_CONFIG_DIR / "cell_mapping.json")
+        if getattr(sys, "frozen", False):
+            _ensure_user_config()
+        self._app_cfg = _load_json(_USER_CONFIG_DIR / "app_config.json")
+        self._cell_map = _load_json(_USER_CONFIG_DIR / "cell_mapping.json")
         logger.info("Configuration loaded successfully.")
 
     def reload(self):
@@ -98,7 +119,7 @@ class AppConfig:
 
     @property
     def output_base(self) -> Path:
-        return _BASE_DIR / self._app_cfg["output"]["base_folder"]
+        return _USER_BASE_DIR / self._app_cfg["output"]["base_folder"]
 
     # ── Cell mapping ──────────────────────────────────────────────────────
     @property
@@ -112,7 +133,10 @@ class AppConfig:
 
     @property
     def template_path(self) -> Path:
-        return _BASE_DIR / "assets" / "REFORMATTED-2307.xlsx"
+        external = _USER_ASSETS_DIR / "REFORMATTED-2307.xlsx"
+        if external.exists():
+            return external
+        return _STATIC_ASSETS_DIR / "REFORMATTED-2307.xlsx"
 
     # ── Persistence ───────────────────────────────────────────────────────
     def save_db_settings(self, server: str, database: str, uid: str, pwd: str,
@@ -124,7 +148,7 @@ class AppConfig:
             "pwd": pwd,
             "trusted_connection": trusted,
         })
-        _save_json(_CONFIG_DIR / "app_config.json", self._app_cfg)
+        _save_json(_USER_CONFIG_DIR / "app_config.json", self._app_cfg)
         logger.info("Database settings saved.")
 
     def save_payor_settings(self, name: str, tin: str, address: str,
@@ -136,7 +160,7 @@ class AppConfig:
             "zip_code": zip_code,
             "signatory": signatory,
         })
-        _save_json(_CONFIG_DIR / "app_config.json", self._app_cfg)
+        _save_json(_USER_CONFIG_DIR / "app_config.json", self._app_cfg)
         logger.info("Payor settings saved.")
 
     def save_defaults(
@@ -155,5 +179,5 @@ class AppConfig:
             "period_from": period_from,
             "period_to": period_to,
         })
-        _save_json(_CONFIG_DIR / "app_config.json", self._app_cfg)
+        _save_json(_USER_CONFIG_DIR / "app_config.json", self._app_cfg)
         logger.info("Default values saved.")

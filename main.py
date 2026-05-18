@@ -7,6 +7,7 @@ import os
 # Ensure project root is on the path when running as a frozen exe
 if getattr(sys, "frozen", False):
     _BASE = sys._MEIPASS  # type: ignore[attr-defined]
+    os.chdir(os.path.dirname(sys.executable))
 else:
     _BASE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, _BASE)
