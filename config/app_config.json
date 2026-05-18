@@ -1,10 +1,10 @@
 {
   "database": {
     "driver": "ODBC Driver 17 for SQL Server",
-    "server": "192.168.0.251",
-    "database": "ACCTG",
-    "uid": "sa",
-    "pwd": "Lem0n91$",
+    "server": "SERVER_NAME",
+    "database": "DATABASE_NAME",
+    "uid": "USERNAME",
+    "pwd": "PASSWORD",
     "trusted_connection": false,
     "_comment": "Set trusted_connection=true to use Windows Authentication (leave uid/pwd blank)"
   },
@@ -17,21 +17,21 @@
     "_comment": "TIN_NUMBER, ATC_CODE, DESCRIPTION, TAX_WITHHELD columns are optional - defaults used if absent"
   },
   "payor": {
-    "name": "TEST COMPANY",
-    "tin": "123-123-123-00000",
-    "address": "MEYCAUAYAN, BULACAN",
-    "zip_code": "3020",
-    "signatory": "Auriell Esquillo / IT / 123-123-123-000",
+    "name": "COMPANY_NAME",
+    "tin": "COMPANY_TIN",
+    "address": "COMPANY_ADDRESS",
+    "zip_code": "ZIP_CODE",
+    "signatory": "FULL_NAME / DESIGNATION / TIN_NUMBER",
     "_comment": "Signatory format: Name / Designation / TIN"
   },
   "defaults": {
-    "atc_code": "CODE123",
-    "income_description": "TEST FEE",
-    "tax_rate": 0.15,
+    "atc_code": "ATC",
+    "income_description": "DESC",
+    "tax_rate": 0.15,   # RATE #
     "date_format": "%m/%d/%Y",
     "_comment": "tax_rate used only if TAX_WITHHELD column absent in DB",
-    "period_from": "04/01/2026",
-    "period_to": "06/30/2026"
+    "period_from": "MM/DD/YYYY",
+    "period_to": "MM/DD/YYYY"
   },
   "output": {
     "base_folder": "OUTPUT",
