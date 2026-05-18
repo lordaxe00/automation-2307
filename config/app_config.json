@@ -1,10 +1,10 @@
 {
   "database": {
     "driver": "ODBC Driver 17 for SQL Server",
-    "server": "SERVER_NAME",
-    "database": "DATABASE_NAME",
-    "uid": "USERNAME",
-    "pwd": "PASSWORD",
+    "server": "192.168.0.251",
+    "database": "ACCTG",
+    "uid": "sa",
+    "pwd": "Lem0n91$",
     "trusted_connection": false,
     "_comment": "Set trusted_connection=true to use Windows Authentication (leave uid/pwd blank)"
   },
