@@ -1,0 +1,76 @@
+{
+  "_comment": "Cell mapping for REFORMATTED-2307.xlsx — verified against actual template structure",
+  "template_sheet": "Page1",
+
+  "period": {
+    "_comment": "K12:P13 = blank FROM area  |  AC12:AH13 = blank TO area",
+    "date_from": "K12",
+    "date_to": "AC12"
+  },
+
+  "payee": {
+    "_comment": "TIN segments separated by dashes at Q17, T17, W17",
+    "tin1": "O17",
+    "tin2": "R17",
+    "tin3": "U17",
+    "tin4": "X17",
+    "name": "B21",
+    "address": "B25",
+    "zip_code": "AL25",
+    "foreign_address": "B29"
+  },
+
+  "payor": {
+    "_comment": "TIN segments separated by dashes at R34, V34, Z34",
+    "tin1": "O34",
+    "tin2": "S34",
+    "tin3": "W34",
+    "tin4": "AA34",
+    "name": "B38",
+    "address": "B42",
+    "zip_code": "AL42"
+  },
+
+  "signatory": {
+    "_comment": "A74:AP76 — merged payor signatory block (rows 74-76)",
+    "name": "A74"
+  },
+
+  "month_labels": {
+    "_comment": "Month header row inside Part III — row 47. Update for each quarter.",
+    "row": 47,
+    "columns": {
+      "month1_label": "P",
+      "month2_label": "U",
+      "month3_label": "Z"
+    }
+  },
+
+  "income_rows": {
+    "_comment": "Part III expanded withholding tax rows 49–58 (10 data rows). Row 59 = Total.",
+    "row_range": [49, 58],
+    "columns": {
+      "description": "A",
+      "atc_code": "M",
+      "month1_amount": "P",
+      "month2_amount": "U",
+      "month3_amount": "Z",
+      "total_amount": "AE",
+      "tax_withheld": "AJ"
+    }
+  },
+
+  "money_payment_rows": {
+    "_comment": "Part III money payments subject to business tax — rows 62–71. Row 72 = Total.",
+    "row_range": [62, 71],
+    "columns": {
+      "description": "A",
+      "atc_code": "M",
+      "month1_amount": "P",
+      "month2_amount": "U",
+      "month3_amount": "Z",
+      "total_amount": "AE",
+      "tax_withheld": "AJ"
+    }
+  }
+}

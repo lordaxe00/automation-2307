@@ -1,0 +1,18 @@
+# Python cache and bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+
+# Logs and output folders
+logs/
+OUTPUT/
+*.log
+
+# Editor and system files
+.vscode/
+.DS_Store
+Thumbs.db

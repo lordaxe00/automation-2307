@@ -1,0 +1,48 @@
+{
+  "database": {
+    "driver": "ODBC Driver 17 for SQL Server",
+    "server": "SERVER_NAME",
+    "database": "DATABASE_NAME",
+    "uid": "USERNAME",
+    "pwd": "PASSWORD",
+    "trusted_connection": false,
+    "_comment": "Set trusted_connection=true to use Windows Authentication (leave uid/pwd blank)"
+  },
+  "query": {
+    "TBL_BIR": "TBL_BIR",
+    "payee_tin_col": "TIN_NUMBER",
+    "atc_col": "ATC_CODE",
+    "description_col": "DESCRIPTION",
+    "tax_withheld_col": "TAX_WITHHELD",
+    "_comment": "TIN_NUMBER, ATC_CODE, DESCRIPTION, TAX_WITHHELD columns are optional - defaults used if absent"
+  },
+  "payor": {
+    "name": "TEST COMPANY",
+    "tin": "123-123-123-00000",
+    "address": "MEYCAUAYAN, BULACAN",
+    "zip_code": "3020",
+    "signatory": "Auriell Esquillo / IT / 123-123-123-000",
+    "_comment": "Signatory format: Name / Designation / TIN"
+  },
+  "defaults": {
+    "atc_code": "CODE123",
+    "income_description": "TEST FEE",
+    "tax_rate": 0.15,
+    "date_format": "%m/%d/%Y",
+    "_comment": "tax_rate used only if TAX_WITHHELD column absent in DB",
+    "period_from": "04/01/2026",
+    "period_to": "06/30/2026"
+  },
+  "output": {
+    "base_folder": "OUTPUT",
+    "excel_subfolder": true,
+    "_comment": "Files saved as OUTPUT/Q1_2026/PAYEE_NAME.xlsx and .pdf"
+  },
+  "app": {
+    "title": "BIR Form 2307 Generator",
+    "version": "1.0.0",
+    "theme": "dark",
+    "log_level": "INFO",
+    "log_file": "logs/bir2307.log"
+  }
+}

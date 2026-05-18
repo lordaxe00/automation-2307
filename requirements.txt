@@ -1,0 +1,22 @@
+# BIR Form 2307 Generator — Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core automation
+openpyxl==3.1.5
+pandas==2.2.3
+
+# Database
+pyodbc==5.2.0
+# sqlalchemy==2.0.36  # Optional: uncomment if you prefer SQLAlchemy ORM
+
+# Desktop UI
+customtkinter==5.2.2
+
+# Windows PDF export (Windows only — skip on non-Windows dev machines)
+pywin32==308; sys_platform == "win32"
+
+# Packaging (dev dependency)
+pyinstaller==6.11.1
+
+# Utilities
+Pillow==11.1.0    # Optional: for app icon support in CustomTkinter
